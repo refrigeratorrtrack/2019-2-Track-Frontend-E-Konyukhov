@@ -77,6 +77,7 @@ class MessageForm extends HTMLElement {
         this.$sendButton = this.shadowRoot.querySelector('.send-message');
 
         this.$messagesArray = [];
+        this.$dialogNum = 1;
 
         this.loadMessages();
 
@@ -136,7 +137,7 @@ class MessageForm extends HTMLElement {
             motherFucker.appendChild(sisterFucker);
 
             this.$messagesContainer.appendChild(motherFucker);
-            // this.$messagesContainer.insertBefore(motherFucker, this.shadowRoot.querySelector('.message'));
+            motherFucker.scrollIntoView();
         }
     }
 
