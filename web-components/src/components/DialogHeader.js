@@ -42,7 +42,7 @@ template.innerHTML = `
         }
 
         .buddy-pic {            
-            background-image: url(src/van.jpg);
+            background-image: url(https://jolipage.api.airstore.io/v1/get/_/4a2ba4c4-98a4-5d8a-8601-7e8b61050000/cloudimage-logo.png);
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
