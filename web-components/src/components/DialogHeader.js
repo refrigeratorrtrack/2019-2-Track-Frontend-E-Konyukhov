@@ -42,7 +42,7 @@ template.innerHTML = `
         }
 
         .buddy-pic {            
-            background-image: url(https://www.myinstants.com/media/instants_images/van-darkholme.jpg);
+            background-image: url(https://pbs.twimg.com/profile_images/894257549108801538/y_2QBDHD_400x400.jpg);
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
