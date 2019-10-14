@@ -100,7 +100,7 @@ template.innerHTML = `
                 </svg>
             </div>
             <div class="buddy-information">
-                <span class="buddy-information_name">Van Darkholme</span>
+                <span class="buddy-information_name">Van Darkholme Fuck</span>
                 <span class="buddy-information_time">был 2 часа назад</span>
             </div>
         </div>
