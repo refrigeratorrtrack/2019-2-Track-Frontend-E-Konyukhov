@@ -2,43 +2,52 @@ const template = document.createElement('template');
 template.innerHTML = `
     <style>
         form-input {
+            display: flex;
+            flex-direction: row;
             width: 100%;
         }
 
         .messages-container {
             display: flex;
             flex-direction: column;
+            height: calc(100vh - 102px);
+            overflow-y: scroll;
+            background-color: #eee;
         }
 
         .message {
-            display: flex;
-            flex-direction: row-reverse;
+            display: inline-flex;
+            flex-direction: column;
             max-width: 25%;
-            min-height: 30px;
+            min-width: 5%;
             margin-left: auto;
             margin-right: 0em;
             margin-top: 10px;
-            border: solid black 1px;
+            border: solid grey 1px;
             border-radius: 5px;
-            padding: 20px;
-            background-color: #8e24aa;
+            padding: 11px;
+            background-color: #8e24aa25;
             color: #000000;
-            word-wrap: break-word;
         }
 
-        .send-message {
-            background-color: red;
-            background-image: url(src/paper-plane-solid.svg);
-            background-repeat: no-repeat;
-            background-position: center;
-            cursor: pointer;
-        }
-
-        .time-mark {
+        .message-text {
             display: flex;
-            font-size: 10px;
-            align-items: flex-end;
-            margin-left: 5px;
+            align-self: flex-start;
+            align-items: center;
+            padding: 3px 3px;
+            font-size: 17px;
+            word-wrap: break-word;
+            word-break: break-word;
+            color: black;
+        }
+
+        .message-time {
+            align-self: flex-end;
+            color: #777;
+            font-size: 11px;
+            line-height: 13px;
+            margin-right: 3px;
+            user-select: none;
         }
 
         .send-container {
@@ -58,7 +67,6 @@ template.innerHTML = `
         <div class="messages-container"></div>
         <div class="send-container">
             <form-input name="message-text" placeholder="Введите сообщение"></form-input>
-            <button class="send-message"></button>
         </div>
     </form>
 `;
@@ -71,18 +79,31 @@ class MessageForm extends HTMLElement {
 
         this.$form = this.shadowRoot.querySelector('form');
         this.$input = this.shadowRoot.querySelector('form-input');
+        
         this.$messagesContainer = this.shadowRoot.querySelector('.messages-container');
-        this.$message = this.shadowRoot.querySelector('.message');
-        this.$timeMark = this.shadowRoot.querySelector('.time-mark');
-        this.$sendButton = this.shadowRoot.querySelector('.send-message');
+        this.$sendButton = this.$input.$sendButton ;
 
-        this.$messagesArray = [];
-        this.$dialogNum = 1;
-
+        // Fucking saved!
+        this.$dialogId = "1488";
+        this.$messagesArray = JSON.parse(localStorage.getItem(this.$dialogId));
+        
+        if (this.$messagesArray === null) {
+            this.$messagesArray = [];
+        }
+        
         this.loadMessages();
 
+        this.$sendButton.addEventListener('click', this.onSubmitClicked.bind(this));
         this.$form.addEventListener('submit', this.onSubmit.bind(this));
         this.$form.addEventListener('keypress', this.onKeyPress.bind(this));
+        this.$form.addEventListener('keyup', this.onKeyUp.bind(this));
+    }
+
+    onSubmitClicked() {
+        this.$form.dispatchEvent(new Event('submit'));
+        this.$sendButton.style.visibility = 'hidden';
+        //this.$sendButton.style.marginLeft = '-35px';
+        this.$input.$input.focus();
     }
 
     onSubmit (event) {
@@ -102,6 +123,16 @@ class MessageForm extends HTMLElement {
         }
     }
 
+    onKeyUp() {
+        this.$sendButton.style.marginLeft = '5px';
+        this.$sendButton.style.visibility = 'inherit';
+
+        if (this.$input.value === '') {
+            this.$sendButton.style.visibility = 'hidden';
+            //this.$sendButton.style.marginLeft = '-35px';
+        }
+    }
+
     messageGenerator (text) {
         if (localStorage.getItem("counter") == null) {
             localStorage.setItem("counter", 0);
@@ -115,35 +146,38 @@ class MessageForm extends HTMLElement {
                                 text: text,
                                 time: [messageTime.getHours(), messageTime.getMinutes()],};
 
-        localStorage.setItem(localStorage.counter, JSON.stringify(generatedMessage));
         this.$messagesArray.push(generatedMessage);
+        localStorage.setItem(this.$dialogId, JSON.stringify(this.$messagesArray));
 
         return generatedMessage;
     }
 
     addMessage (tempMessage) {
         if (typeof(tempMessage) !== "undefined") {
-            let motherFucker = document.createElement('div');
-            motherFucker.className = "message";
-            
-            let fatherFucker = document.createElement('div');
-            fatherFucker.className = "time-mark";
-            fatherFucker.innerHTML = `<div>${tempMessage.time[0]}:${tempMessage.time[1]}</div>`;
-            motherFucker.appendChild(fatherFucker);
+            let newMessage = document.createElement('div');
+            newMessage.className = "message";
 
-            let sisterFucker = document.createElement('div');
-            sisterFucker.className = "text";
-            sisterFucker.innerText = tempMessage.text;
-            motherFucker.appendChild(sisterFucker);
+            let messageText = document.createElement('div');
+            messageText.className = "message-text";
+            messageText.innerText = tempMessage.text;
+            newMessage.appendChild(messageText);
 
-            this.$messagesContainer.appendChild(motherFucker);
-            motherFucker.scrollIntoView();
+            let messageTime = document.createElement('div');
+            let hours = tempMessage.time[0];
+            let minutes = tempMessage.time[1];
+            hours = (hours < 10) ? (`0${hours}`) : hours;
+            minutes = (minutes < 10) ? (`0${minutes}`) : minutes;
+            messageTime.className = "message-time";
+            messageTime.innerHTML = `<div>${hours}:${minutes}</div>`;
+            newMessage.appendChild(messageTime);
+
+            this.$messagesContainer.appendChild(newMessage);
+            newMessage.scrollIntoView();
         }
     }
 
     loadMessages () {
-        for (let i = 0; i <= localStorage.counter; i++) {
-            this.$messagesArray[i] = JSON.parse(localStorage.getItem(i));
+        for (let i = 0; i <= this.$messagesArray.length; i++) {
             this.addMessage(this.$messagesArray[i]);
         }
     }
