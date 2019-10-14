@@ -18,3 +18,12 @@ body {
     line-height: 20px;
 }
 
+dialog-header {
+  z-index: 1;
+}
+
+message-form {
+  display: flex;
+  flex-direction: column;
+}
+

@@ -72,30 +72,30 @@ template.innerHTML = `
 `;
 
 class FormInput extends HTMLElement {
-    constructor () {
-        super();
-        this.shadowRoot = this.attachShadow({ mode: 'open' });
-        this.shadowRoot.appendChild(template.content.cloneNode(true));
+  constructor() {
+    super();
+    this.shadowRoot = this.attachShadow({ mode: 'open' });
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        this.$input = this.shadowRoot.querySelector('input');
-        this.$sendButton = this.shadowRoot.querySelector('.send-message');
-    }
+    this.$input = this.shadowRoot.querySelector('input');
+    this.$sendButton = this.shadowRoot.querySelector('.send-message');
+  }
 
-    static get observedAttributes() {
-        return ['name', 'value', 'placeholder', 'disabled'];
-    }
+  static get observedAttributes() {
+    return ['name', 'value', 'placeholder', 'disabled'];
+  }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        this.$input.setAttribute(name, newValue);
-    }
+  attributeChangedCallback(name, oldValue, newValue) {
+    this.$input.setAttribute(name, newValue);
+  }
 
-    get value() {
-        return this.$input.value;
-    }
+  get value() {
+    return this.$input.value;
+  }
 
-    set value(value) {
-        this.$input.value = value;
-    }
+  set value(value) {
+    this.$input.value = value;
+  }
 }
 
 customElements.define('form-input', FormInput);

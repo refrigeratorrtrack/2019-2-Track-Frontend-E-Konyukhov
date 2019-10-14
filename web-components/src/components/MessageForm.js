@@ -72,115 +72,117 @@ template.innerHTML = `
 `;
 
 class MessageForm extends HTMLElement {
-    constructor () {
-        super();
-        this.shadowRoot = this.attachShadow({ mode: 'open' });
-        this.shadowRoot.appendChild(template.content.cloneNode(true));
+  constructor() {
+    super();
+    this.shadowRoot = this.attachShadow({ mode: 'open' });
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        this.$form = this.shadowRoot.querySelector('form');
-        this.$input = this.shadowRoot.querySelector('form-input');
-        
-        this.$messagesContainer = this.shadowRoot.querySelector('.messages-container');
-        this.$sendButton = this.$input.$sendButton ;
+    this.$form = this.shadowRoot.querySelector('form');
+    this.$input = this.shadowRoot.querySelector('form-input');
 
-        // Fucking saved!
-        this.$dialogId = "1488";
-        this.$messagesArray = JSON.parse(localStorage.getItem(this.$dialogId));
-        
-        if (this.$messagesArray === null) {
-            this.$messagesArray = [];
-        }
-        
-        this.loadMessages();
+    this.$messagesContainer = this.shadowRoot.querySelector('.messages-container');
+    this.$sendButton = this.$input.$sendButton;
 
-        this.$sendButton.addEventListener('click', this.onSubmitClicked.bind(this));
-        this.$form.addEventListener('submit', this.onSubmit.bind(this));
-        this.$form.addEventListener('keypress', this.onKeyPress.bind(this));
-        this.$form.addEventListener('keyup', this.onKeyUp.bind(this));
+    // Fucking saved!
+    this.$dialogId = '1488';
+    this.$messagesArray = JSON.parse(localStorage.getItem(this.$dialogId));
+
+    if (this.$messagesArray === null) {
+      this.$messagesArray = [];
     }
 
-    onSubmitClicked() {
-        this.$form.dispatchEvent(new Event('submit'));
-        this.$sendButton.style.visibility = 'hidden';
-        //this.$sendButton.style.marginLeft = '-35px';
-        this.$input.$input.focus();
+    this.loadMessages();
+
+    this.$sendButton.addEventListener('click', this.onSubmitClicked.bind(this));
+    this.$form.addEventListener('submit', this.onSubmit.bind(this));
+    this.$form.addEventListener('keypress', this.onKeyPress.bind(this));
+    this.$form.addEventListener('keyup', this.onKeyUp.bind(this));
+  }
+
+  onSubmitClicked() {
+    this.$form.dispatchEvent(new Event('submit'));
+    this.$sendButton.style.visibility = 'hidden';
+    this.$input.$input.focus();
+  }
+
+  onSubmit(event) {
+    event.preventDefault();
+    if (this.$input.value !== '') {
+      this.addMessage(this.messageGenerator(this.$input.value));
     }
 
-    onSubmit (event) {
-        event.preventDefault();
-        if (this.$input.value !== "") {
-            this.addMessage(this.messageGenerator(this.$input.value));
-        }
-        this.$input.value = "";
+    this.$input.value = '';
+  }
+
+  onKeyPress(event) {
+    if (event.keyCode === 13) {
+      if (this.$input.value !== '') {
+        this.addMessage(this.messageGenerator(this.$input.value));
+      }
+
+      this.$input.value = '';
+    }
+  }
+
+  onKeyUp() {
+    this.$sendButton.style.marginLeft = '5px';
+    this.$sendButton.style.visibility = 'inherit';
+
+    if (this.$input.value === '') {
+      this.$sendButton.style.visibility = 'hidden';
+    }
+  }
+
+  messageGenerator(fuckingText) {
+    if (localStorage.getItem('counter') === null) {
+      localStorage.setItem('counter', 0);
+    } else {
+      localStorage.counter += 1;
     }
 
-    onKeyPress (event) {
-        if (event.keyCode == 13) {
-            if (this.$input.value !== "") {
-                this.addMessage(this.messageGenerator(this.$input.value));
-            }
-            this.$input.value = "";
-        }
+    const messageTime = new Date();
+
+    const generatedMessage = {
+      name: 'George',
+      text: fuckingText,
+      time: [messageTime.getHours(), messageTime.getMinutes()],
+    };
+
+    this.$messagesArray.push(generatedMessage);
+    localStorage.setItem(this.$dialogId, JSON.stringify(this.$messagesArray));
+
+    return generatedMessage;
+  }
+
+  addMessage(tempMessage) {
+    if (typeof tempMessage !== 'undefined') {
+      const newMessage = document.createElement('div');
+      newMessage.className = 'message';
+
+      const messageText = document.createElement('div');
+      messageText.className = 'message-text';
+      messageText.innerText = tempMessage.text;
+      newMessage.appendChild(messageText);
+
+      const messageTime = document.createElement('div');
+      let hours = tempMessage.time[0];
+      let minutes = tempMessage.time[1];
+      hours = (hours < 10) ? (`0${hours}`) : hours;
+      minutes = (minutes < 10) ? (`0${minutes}`) : minutes;
+      messageTime.className = 'message-time';
+      messageTime.innerHTML = `<div>${hours}:${minutes}</div>`;
+      newMessage.appendChild(messageTime);
+
+      this.$messagesContainer.appendChild(newMessage);
+      newMessage.scrollIntoView();
     }
+  }
 
-    onKeyUp() {
-        this.$sendButton.style.marginLeft = '5px';
-        this.$sendButton.style.visibility = 'inherit';
-
-        if (this.$input.value === '') {
-            this.$sendButton.style.visibility = 'hidden';
-            //this.$sendButton.style.marginLeft = '-35px';
-        }
+  loadMessages() {
+    for (let i = 0; i <= this.$messagesArray.length; i += 1) {
+      this.addMessage(this.$messagesArray[i]);
     }
-
-    messageGenerator (text) {
-        if (localStorage.getItem("counter") == null) {
-            localStorage.setItem("counter", 0);
-        } else {
-            localStorage.counter++;
-        }
-
-        let messageTime = new Date();
-
-        let generatedMessage = {name: "George",
-                                text: text,
-                                time: [messageTime.getHours(), messageTime.getMinutes()],};
-
-        this.$messagesArray.push(generatedMessage);
-        localStorage.setItem(this.$dialogId, JSON.stringify(this.$messagesArray));
-
-        return generatedMessage;
-    }
-
-    addMessage (tempMessage) {
-        if (typeof(tempMessage) !== "undefined") {
-            let newMessage = document.createElement('div');
-            newMessage.className = "message";
-
-            let messageText = document.createElement('div');
-            messageText.className = "message-text";
-            messageText.innerText = tempMessage.text;
-            newMessage.appendChild(messageText);
-
-            let messageTime = document.createElement('div');
-            let hours = tempMessage.time[0];
-            let minutes = tempMessage.time[1];
-            hours = (hours < 10) ? (`0${hours}`) : hours;
-            minutes = (minutes < 10) ? (`0${minutes}`) : minutes;
-            messageTime.className = "message-time";
-            messageTime.innerHTML = `<div>${hours}:${minutes}</div>`;
-            newMessage.appendChild(messageTime);
-
-            this.$messagesContainer.appendChild(newMessage);
-            newMessage.scrollIntoView();
-        }
-    }
-
-    loadMessages () {
-        for (let i = 0; i <= this.$messagesArray.length; i++) {
-            this.addMessage(this.$messagesArray[i]);
-        }
-    }
+  }
 }
 
 customElements.define('message-form', MessageForm);
