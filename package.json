@@ -1,8 +1,9 @@
 {
-  "name": "track-mail-2019-refrigeratorr",
+  "name": "2019-2-Track-Frontend-E-Konyukhov",
+  "homepage": "https://refrigeratorrtrack.github.io/2019-2-Track-Frontend-E-Konyukhov/",
+  "author": "Egor Konyukhov",
   "description": "Mail.Ru Group Frontend Track course, 2019",
   "version": "0.1.0",
-  "author": "refrigeratorrtrack",
   "dependencies": {
     "@emotion/core": "^10.0.14",
     "@emotion/styled": "^10.0.14",
