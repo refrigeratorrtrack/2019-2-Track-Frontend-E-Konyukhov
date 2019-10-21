@@ -1,74 +1,39 @@
 const template = document.createElement('template');
 template.innerHTML = `
-    <style>
-        form-input {
-            display: flex;
-            flex-direction: row;
-            width: 100%;
-        }
+  <style>
+    form-input {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+    }
 
-        .messages-container {
-            display: flex;
-            flex-direction: column;
-            height: calc(100vh - 102px);
-            overflow-y: scroll;
-            background-color: #eee;
-        }
+    .messages-container {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 102px);
+      overflow-y: scroll;
+      background-color: #eee;
+    }
 
-        .message {
-            display: inline-flex;
-            flex-direction: column;
-            max-width: 25%;
-            min-width: 5%;
-            margin-left: auto;
-            margin-right: 0em;
-            margin-top: 10px;
-            border: solid grey 1px;
-            border-radius: 5px;
-            padding: 11px;
-            background-color: #8e24aa25;
-            color: #000000;
-        }
+    .send-container {
+      display: flex;
+      flex-direction: row;
+      position: fixed;
+      bottom: 0px;
+      right: 0px;
+      left: 0px;
+    }
 
-        .message-text {
-            display: flex;
-            align-self: flex-start;
-            align-items: center;
-            padding: 3px 3px;
-            font-size: 17px;
-            word-wrap: break-word;
-            word-break: break-word;
-            color: black;
-        }
-
-        .message-time {
-            align-self: flex-end;
-            color: #777;
-            font-size: 11px;
-            line-height: 13px;
-            margin-right: 3px;
-            user-select: none;
-        }
-
-        .send-container {
-            display: flex;
-            flex-direction: row;
-            position: fixed;
-            bottom: 0px;
-            right: 0px;
-            left: 0px;
-        }
-
-        input[type=submit] {
-            visibility: collapse;
-        }
-    </style>
-    <form>
-        <div class="messages-container"></div>
-        <div class="send-container">
-            <form-input name="message-text" placeholder="Введите сообщение"></form-input>
-        </div>
-    </form>
+    input[type=submit] {
+      visibility: collapse;
+    }
+  </style>
+  <form>
+    <div class="messages-container"></div>
+    <div class="send-container">
+      <form-input name="message-text" placeholder="Введите сообщение"></form-input>
+    </div>
+  </form>
 `;
 
 class MessageForm extends HTMLElement {
@@ -156,22 +121,15 @@ class MessageForm extends HTMLElement {
 
   addMessage(tempMessage) {
     if (typeof tempMessage !== 'undefined') {
-      const newMessage = document.createElement('div');
-      newMessage.className = 'message';
+      const newMessage = document.createElement('custom-message');
 
-      const messageText = document.createElement('div');
-      messageText.className = 'message-text';
-      messageText.innerText = tempMessage.text;
-      newMessage.appendChild(messageText);
+      newMessage.$messageText.innerText = tempMessage.text;
 
-      const messageTime = document.createElement('div');
       let hours = tempMessage.time[0];
       let minutes = tempMessage.time[1];
       hours = (hours < 10) ? (`0${hours}`) : hours;
       minutes = (minutes < 10) ? (`0${minutes}`) : minutes;
-      messageTime.className = 'message-time';
-      messageTime.innerHTML = `<div>${hours}:${minutes}</div>`;
-      newMessage.appendChild(messageTime);
+      newMessage.$messageTime.innerText = `${hours}:${minutes}`;
 
       this.$messagesContainer.appendChild(newMessage);
       newMessage.scrollIntoView();
