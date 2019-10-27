@@ -124,12 +124,16 @@ class MessageForm extends HTMLElement {
       const newMessage = document.createElement('custom-message');
 
       newMessage.$messageText.innerText = tempMessage.text;
+      newMessage.text = tempMessage.text;
 
       let hours = tempMessage.time[0];
       let minutes = tempMessage.time[1];
       hours = (hours < 10) ? (`0${hours}`) : hours;
       minutes = (minutes < 10) ? (`0${minutes}`) : minutes;
       newMessage.$messageTime.innerText = `${hours}:${minutes}`;
+      newMessage.time = `${hours}:${minutes}`;
+
+      newMessage.build();
 
       this.$messagesContainer.appendChild(newMessage);
       newMessage.scrollIntoView();

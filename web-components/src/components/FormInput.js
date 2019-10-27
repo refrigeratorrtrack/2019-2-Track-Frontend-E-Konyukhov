@@ -79,6 +79,7 @@ class FormInput extends HTMLElement {
 
     this.$input = this.shadowRoot.querySelector('input');
     this.$sendButton = this.shadowRoot.querySelector('.send-message');
+    this.$attachButton = this.shadowRoot.querySelector('.attach');
   }
 
   static get observedAttributes() {
