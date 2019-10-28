@@ -1,6 +1,7 @@
 import './index.css';
 
-import './components/Message';
+import './components/MainHeader';
 import './components/FormInput';
 import './components/MessageForm';
-import './components/DialogHeader';
+import './components/Chats';
+import './components/Message';
