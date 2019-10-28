@@ -37,7 +37,7 @@ template.innerHTML = `
       margin-bottom: 1vh;
     }
     
-    .right-messages {
+    .my-messages {
       position: relative;
       justify-content: flex-end;
       align-items: flex-end;
@@ -46,7 +46,7 @@ template.innerHTML = `
       margin-right: 2vh;
     }
     
-    .right-messages::before {
+    .my-messages::before {
       content: ' ';
       position: absolute;
       width: 0;
@@ -57,7 +57,7 @@ template.innerHTML = `
       border-color: transparent transparent #e2d2e6 #e2d2e6;
     }
     
-    .left-messages {
+    .not-my-messages {
       position: relative;
       justify-content: flex-start;
       align-items: flex-end;
@@ -66,7 +66,7 @@ template.innerHTML = `
       margin-left: 2vh;
     }
       
-    .left-messages::before {
+    .not-my-messages::before {
       content: ' ';
       position: absolute;
       width: 0;
@@ -82,19 +82,19 @@ template.innerHTML = `
     }
 
     .flex-container {
-      display: -webkit-box;      /* iOS 6-, Safari 3.1-6 */
-      display: -moz-box;         /* Firefox 19 */
-      display: -ms-flexbox;      /* IE 10 */
-      display: -webkit-flex;     /* Chrome */
-      display: inline-flex;             /* Opera 12.1, Firefox 20+ */
+      display: -webkit-box;   /* iOS 6-, Safari 3.1-6 */
+      display: -moz-box;      /* Firefox 19 */
+      display: -ms-flexbox;   /* IE 10 */
+      display: -webkit-flex;  /* Chrome */
+      display: inline-flex;   /* Opera 12.1, Firefox 20+ */
     }
 
     .flex-item {
-      -webkit-box-flex: 1;      /* iOS 6-, Safari 3.1-6 */
-      -moz-box-flex: 1;         /* Firefox 19- */
-      -webkit-flex: 1;          /* Chrome */
-      -ms-flex: 1;              /* IE 10 */
-      flex: 1;                  /* Opera 12.1, Firefox 20+ */
+      -webkit-box-flex: 1;    /* iOS 6-, Safari 3.1-6 */
+      -moz-box-flex: 1;       /* Firefox 19- */
+      -webkit-flex: 1;        /* Chrome */
+      -ms-flex: 1;            /* IE 10 */
+      flex: 1;                /* Opera 12.1, Firefox 20+ */
     }
   </style>
     
@@ -179,7 +179,7 @@ class MessageForm extends HTMLElement {
     let minutes = date.getMinutes();
     hours = (hours < 10) ? (`0${hours}`) : hours;
     minutes = (minutes < 10) ? (`0${minutes}`) : minutes;
-    divFormatCustomMessage.timeJSON = `${hours}:${minutes}`;
+    divFormatCustomMessage.time = `${hours}:${minutes}`;
 
     divFormatCustomMessage.build();
 

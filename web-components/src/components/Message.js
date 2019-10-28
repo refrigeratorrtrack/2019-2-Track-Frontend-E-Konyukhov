@@ -71,14 +71,14 @@ class CustomMessage extends HTMLElement {
     this.$messageText.innerText = this.text;
     this.$messageTime.innerText = this.time;
     if (this.author === 'Me') {
-      this.shadowRoot.host.className = 'custom-message right-messages';
+      this.shadowRoot.host.className = 'custom-message my-messages';
       if (this.read === false) {
         this.$mesIndicator.innerHTML = readFalse;
       } else if (this.read === true) {
         this.$mesIndicator.innerHTML = readTrue;
       }
     } else {
-      this.shadowRoot.host.className = 'custom-message left-messages';
+      this.shadowRoot.host.className = 'custom-message not-my-messages';
     }
   }
 }
