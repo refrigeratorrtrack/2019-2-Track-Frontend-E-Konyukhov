@@ -167,7 +167,7 @@ class MainHeader extends HTMLElement {
     super();
     this.$main_window = document.querySelector('.main-window');
     this.$chats_list = document.querySelector('my-chats');
-    
+
     this.shadowRoot = this.attachShadow({ mode: 'open' });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 

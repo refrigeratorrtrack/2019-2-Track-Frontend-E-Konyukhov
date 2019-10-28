@@ -114,7 +114,7 @@ class MessageForm extends HTMLElement {
 
     this.$input.setAttribute('name', 'message-text');
     this.$input.setAttribute('placeholder', 'Сообщение');
-    
+
     this.$chatContainer = this.shadowRoot.querySelector('.chat-container');
     this.$attach_button = this.$input.$attach_button;
     this.$submit_button = this.$input.$submit_button;
