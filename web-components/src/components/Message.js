@@ -59,7 +59,7 @@ class CustomMessage extends HTMLElement {
     this.shadowRoot = this.attachShadow({ mode: 'open' });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-    this.read = false;
+    this.$haveRead = false;
 
     this.$messageText = this.shadowRoot.querySelector('.message-text');
     this.$messageInfo = this.shadowRoot.querySelector('.message-info');
@@ -70,15 +70,24 @@ class CustomMessage extends HTMLElement {
   build() {
     this.$messageText.innerText = this.text;
     this.$messageTime.innerText = this.time;
+    this.$haveRead = this.read;
+
     if (this.author === 'Me') {
       this.shadowRoot.host.className = 'custom-message my-messages';
-      if (this.read === false) {
+
+      if (this.$haveRead === false) {
         this.$messageReadFlag.innerHTML = readFalse;
-      } else if (this.read === true) {
+      } else if (this.$haveRead === true) {
         this.$messageReadFlag.innerHTML = readTrue;
       }
     } else {
       this.shadowRoot.host.className = 'custom-message not-my-messages';
+
+      if (this.$haveRead === false) {
+        this.$messageReadFlag.innerHTML = readFalse;
+      } else if (this.$haveRead === true) {
+        this.$messageReadFlag.innerHTML = readTrue;
+      }
     }
   }
 }

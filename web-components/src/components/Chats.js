@@ -118,20 +118,20 @@ class Chats extends HTMLElement {
 
   addChat(chatObj) {
     const divFormatChatElem = document.createElement('div');
-    const divFormatbuddyImg = document.createElement('div');
+    const divFormatBuddyImg = document.createElement('div');
     const divFormatTextInfo = document.createElement('div');
     const divFormatMessagePreview = document.createElement('div');
-    const spanFormatbuddyName = document.createElement('span');
+    const spanFormatBuddyName = document.createElement('span');
     const spanFormatLastMessageText = document.createElement('span');
     const divFormatLastMessageInfo = document.createElement('div');
     const spanFormatLastMessageTime = document.createElement('span');
     const divFormatIndicator = document.createElement('div');
 
     divFormatChatElem.className = 'chat-elem';
-    divFormatbuddyImg.className = 'buddy-img';
+    divFormatBuddyImg.className = 'buddy-img';
     divFormatTextInfo.className = 'text-info';
     divFormatMessagePreview.className = 'message-preview';
-    spanFormatbuddyName.className = 'buddy-name';
+    spanFormatBuddyName.className = 'buddy-name';
     spanFormatLastMessageText.className = 'lastmessage-text';
     divFormatLastMessageInfo.className = 'lastmessage-info';
     spanFormatLastMessageTime.className = 'lastmessage-time';
@@ -156,8 +156,8 @@ class Chats extends HTMLElement {
               c0,1.101,0.494,2.128,1.34,2.821c0.81,3.173,2.477,5.575,3.093,6.389v2.894c0,0.816-0.445,1.566-1.162,1.958l-7.907,4.313
               c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"/>
     </svg>`;
-    divFormatbuddyImg.innerHTML = buddyImg;
-    spanFormatbuddyName.innerText = chatObj.buddy;
+    divFormatBuddyImg.innerHTML = buddyImg;
+    spanFormatBuddyName.innerText = chatObj.buddy;
 
     if (chatObj.messages.length !== 0) {
       const lastmessageObj = chatObj.messages[chatObj.messages.length - 1];
@@ -168,23 +168,21 @@ class Chats extends HTMLElement {
       minutes = (minutes < 10) ? (`0${minutes}`) : minutes;
       spanFormatLastMessageText.innerText = lastmessageObj.messageText;
       spanFormatLastMessageTime.innerText = `${hours}:${minutes}`;
+
+      if (lastmessageObj.haveReadFlag === false) {
+        divFormatIndicator.innerHTML = readFalse;
+      } else if (lastmessageObj.haveReadFlag === true) {
+        divFormatIndicator.innerHTML = readTrue;
+      }
     }
 
-    this.read = false;
-
-    if (this.read === false) {
-      divFormatIndicator.innerHTML = readFalse;
-    } else if (this.read === true) {
-      divFormatIndicator.innerHTML = readTrue;
-    }
-
-    divFormatMessagePreview.appendChild(spanFormatbuddyName);
+    divFormatMessagePreview.appendChild(spanFormatBuddyName);
     divFormatMessagePreview.appendChild(spanFormatLastMessageText);
     divFormatLastMessageInfo.appendChild(spanFormatLastMessageTime);
     divFormatLastMessageInfo.appendChild(divFormatIndicator);
     divFormatTextInfo.appendChild(divFormatMessagePreview);
     divFormatTextInfo.appendChild(divFormatLastMessageInfo);
-    divFormatChatElem.appendChild(divFormatbuddyImg);
+    divFormatChatElem.appendChild(divFormatBuddyImg);
     divFormatChatElem.appendChild(divFormatTextInfo);
 
     divFormatChatElem.addEventListener('click', this.openChat.bind(this));
@@ -201,6 +199,7 @@ class Chats extends HTMLElement {
 
     while (target.className !== 'chat-elem') {
       target = target.parentElement;
+
       if (target === null) {
         return;
       }
@@ -224,9 +223,11 @@ class Chats extends HTMLElement {
 
   chatToLocal(chatObj) {
     this.storageChatArray = JSON.parse(localStorage.getItem(chatsArrayKey));
+
     if (this.storageChatArray === null) {
       this.storageChatArray = [];
     }
+
     this.storageChatArray.push(chatObj);
     localStorage.setItem(chatsArrayKey, JSON.stringify(this.storageChatArray));
   }
@@ -235,14 +236,18 @@ class Chats extends HTMLElement {
     while (this.shadowRoot.hasChildNodes()) {
       this.shadowRoot.removeChild(this.shadowRoot.firstChild);
     }
+
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 
     const storageChatArray = JSON.parse(localStorage.getItem(chatsArrayKey));
     this.chatCount = 0;
+
     if (storageChatArray === null) {
       return;
     }
+
     this.chatCount = storageChatArray.length;
+
     for (let i = 0; i < this.chatCount; i += 1) {
       this.addChat(storageChatArray[i]);
     }

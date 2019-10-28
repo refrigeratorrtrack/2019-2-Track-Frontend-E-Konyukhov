@@ -144,6 +144,7 @@ class MessageForm extends HTMLElement {
     const messageObj = {};
     messageObj.messageText = this.$input.value;
     messageObj.messageAuthor = 'Me';
+    messageObj.haveReadFlag = false;
     messageObj.sendingTime = new Date();
 
     this.$input.value = '';
@@ -153,6 +154,7 @@ class MessageForm extends HTMLElement {
 
   onKeyPress(event) {
     this.onKeyUp();
+
     if (event.keyCode === 13) {
       this.$form.dispatchEvent(new Event('submit'));
     }
@@ -160,6 +162,7 @@ class MessageForm extends HTMLElement {
 
   onKeyUp() {
     this.$submit_button.style.display = 'inline-block';
+
     if (this.$input.value === '') {
       this.$submit_button.style.display = 'none';
     }
@@ -170,6 +173,7 @@ class MessageForm extends HTMLElement {
 
     divFormatCustomMessage.text = messageObj.messageText;
     divFormatCustomMessage.author = messageObj.messageAuthor;
+    divFormatCustomMessage.read = messageObj.haveReadFlag;
     const date = new Date(messageObj.sendingTime);
     let hours = date.getHours();
     let minutes = date.getMinutes();
@@ -185,9 +189,11 @@ class MessageForm extends HTMLElement {
 
   messageToLocal(messageObj) {
     const storageChatArray = JSON.parse(localStorage.getItem(this.$chatsArrayKey));
+
     if (storageChatArray[this.$idChat].messages.length === 0) {
       storageChatArray[this.$idChat].messages = [];
     }
+
     storageChatArray[this.$idChat].messages.push(messageObj);
     localStorage.setItem(this.$chatsArrayKey, JSON.stringify(storageChatArray));
   }
