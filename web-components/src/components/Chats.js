@@ -1,31 +1,31 @@
 const chatsArrayKey = 'chatsArray';
-readFalse =  `<svg class="tick" x="0px" y="0px" width="3vh" height="3vh" viewBox="0 0 448.8 448.8" style="fill: currentColor;" xml:space="preserve">
-                <polygon points="142.8,323.85 35.7,216.75 0,252.45 142.8,395.25 448.8,89.25 413.1,53.55"/>
-              </svg>`;
-readTrue = `<svg class="double-tick" x ="0px" y="0px" width="3vh" height="3vh" viewBox="0 0 594.149 594.149" style="fill: currentColor;" xml:space="preserve">
-              <path d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1
-              l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z"/>
-            </svg>`;
+const readFalse =  `<svg class="tick" x="0px" y="0px" width="3vh" height="3vh" viewBox="0 0 448.8 448.8" style="fill: currentColor;" xml:space="preserve">
+                      <polygon points="142.8,323.85 35.7,216.75 0,252.45 142.8,395.25 448.8,89.25 413.1,53.55"/>
+                    </svg>`;
+const readTrue = `<svg class="double-tick" x ="0px" y="0px" width="3vh" height="3vh" viewBox="0 0 594.149 594.149" style="fill: currentColor;" xml:space="preserve">
+                    <path d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1
+                    l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z"/>
+                  </svg>`;
 
 const template = document.createElement('template');
 template.innerHTML = `
   <style>
     .chat-elem {
       display: inline-flex;
-      min-height: 11vh;
+      min-height: 9vh;
       flex-direction: row;
-      line-height: 11vh;
+      line-height: 9vh;
       justify-content: space-between;
       align-items: center;
       user-select: none;
     }
     
     .buddy-img {
-      color: #9C33FF;
+      color: #9c33ff;
       height: 100%;
-      line-height: 11vh;
+      line-height: 9vh;
       align-self: center;
-      margin-left: 1vh;
+      margin-left: 0.5vh;
     }
       
     .buddy-logo {
@@ -42,7 +42,7 @@ template.innerHTML = `
       flex-direction: row;
       overflow: hidden;
       border-bottom: 1px solid #0002;
-      margin-left: 2vh;
+      margin-left: 3vh;
     }
 
     .message-preview {
@@ -51,20 +51,20 @@ template.innerHTML = `
       flex-direction: column;
       justify-content: center;
       width: 100%;
-      padding-right: 2vh;
+      padding-right: 3vh;
       overflow: hidden;
     }
 
     .buddy-name {
-      line-height: 4vh;
-      font-size: 3vh;
+      line-height: 3vh;
+      font-size: 2vh;
       font-weight: 550;
       overflow: hidden;
     }
 
     .lastmessage-text {
-      line-height: 4vh;
-      font-size: 2vh;
+      line-height: 3vh;
+      font-size: 1.5vh;
       color: #0009;
       overflow: hidden;
     }
@@ -79,8 +79,8 @@ template.innerHTML = `
     }
 
     .lastmessage-time {
-      line-height: 4vh;
-      font-size: 2vh;
+      line-height: 3vh;
+      font-size: 1.5vh;
     }
 
     .indicator {
@@ -100,7 +100,7 @@ class Chats extends HTMLElement {
     this.$chats_list = document.querySelector('my-chats');
     this.$chatHeader = this.$MainHeader.$chatHeader;
     this.$chatsHeader = this.$MainHeader.$chatsHeader;
-    
+
     this.$newchat_button = this.$main_window.querySelector('.create-dialog');
     this.$newchat_button.addEventListener('click', this.onChatCreateClicked.bind(this));
   }

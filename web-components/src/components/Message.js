@@ -11,7 +11,7 @@ template.innerHTML = `
   <style>
     .message-text {
       color: black;
-      font-size: calc(2vh + 10px);
+      font-size: calc(1.5vh + 10px);
       letter-spacing: 0.07em;
       word-wrap: break-word;
       word-break: break-word;

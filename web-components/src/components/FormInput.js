@@ -5,7 +5,7 @@ template.innerHTML = `
       border: 0;
       outline: none;
       width: calc(100% - 2px);
-      font-size: 3vh;
+      font-size: 2.5vh;
     }
     
     :host {
@@ -43,7 +43,7 @@ template.innerHTML = `
     }
     
     .submit-button-img {
-      height: 4vh;
+      height: 4.5vh;
       padding-top: 4px;
       fill: currentColor;
     }

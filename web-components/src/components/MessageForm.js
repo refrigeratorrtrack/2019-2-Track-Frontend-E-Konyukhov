@@ -18,20 +18,19 @@ template.innerHTML = `
       height: 85vh;
       display: flex;
       flex-direction: column;
-      background-color: #EEE;
+      background-color: #eee;
 
       -webkit-overflow-scrolling: touch;
       overflow-y: scroll;
     }
     
     .custom-message {
-      display: -webkit-inline-flex;
-      display: -ms-inline-flexbox;
       display: inline-flex;
       line-height: 4vh;
-      max-width: 80%;
-      min-width: 30%;
+      max-width: 50%;
+      min-width: 15%;
       flex-direction: column;
+      border: 1px solid black;
       border-radius: 1vh;
       margin-top: 1vh;
       margin-bottom: 1vh;
@@ -43,7 +42,7 @@ template.innerHTML = `
       align-items: flex-end;
       align-self: flex-end;
       background-color: #8e24aa25;
-      margin-right: 2vh;
+      margin-right: 4vh;
     }
     
     .my-messages::before {
@@ -63,7 +62,7 @@ template.innerHTML = `
       align-items: flex-end;
       align-self: flex-start;
       background-color: #fafafa;
-      margin-left: 2vh;
+      margin-left: 4vh;
     }
       
     .not-my-messages::before {
@@ -123,7 +122,6 @@ class MessageForm extends HTMLElement {
     this.$idChat = 0;
     this.$chatsArrayKey = 'chatsArray';
 
-    this.$attach_button.addEventListener('click', this.onAttachClicked.bind(this));
     this.$submit_button.addEventListener('click', this.onSubmitClicked.bind(this));
     this.$form.addEventListener('submit', this.onSubmit.bind(this));
     this.$form.addEventListener('keypress', this.onKeyPress.bind(this));
@@ -136,20 +134,18 @@ class MessageForm extends HTMLElement {
     this.$input.$input.focus();
   }
 
-  onAttachClicked() {
-    //  It's only test
-    this.$input.$input.focus();
-  }
-
   onSubmit(event) {
     event.preventDefault();
+
     if (this.$input.value === '') {
       return;
     }
+
     const messageObj = {};
     messageObj.messageText = this.$input.value;
     messageObj.messageAuthor = 'Me';
     messageObj.sendingTime = new Date();
+
     this.$input.value = '';
     this.addMessage(messageObj);
     this.messageToLocal(messageObj);
