@@ -34,7 +34,7 @@ main-header {
   user-select: none;
 }
 
-chats-list {
+my-chats {
   display: flex;
   flex-direction: column;
   height: 91vh;
@@ -54,7 +54,7 @@ message-form {
   flex-direction: column;
 }
 
-.create-chat {
+.create-dialog {
   position: fixed;
   right: 3vh;
   bottom: 3vh;
@@ -71,7 +71,7 @@ message-form {
   transition: 0.2s;
 }
 
-.create-chat-img {
+.create-dialog-img {
   width: 50%;
   height: 50%;
 }

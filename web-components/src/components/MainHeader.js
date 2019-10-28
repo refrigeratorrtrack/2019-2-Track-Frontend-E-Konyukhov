@@ -100,7 +100,7 @@ template.innerHTML = `
         <rect y="306" width="408" height="40"/>
       </svg>
     </button>
-    <span class="header">Messenger</span>
+    <span class="header">VanDarkCall</span>
     <button class="button-search-chats">
       <svg class="button-img" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 56.966 56.966" xml:space="preserve">
         <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23
@@ -140,7 +140,7 @@ template.innerHTML = `
       </div>
       <div class="buddy-info">
         <span class="buddy-name"></span>
-        <span class="buddy-status">была 2 часа назад</span>
+        <span class="buddy-status">был(а) N минут назад</span>
       </div>
     </div>
     <button class="button-search-chat">
@@ -165,7 +165,7 @@ class MainHeader extends HTMLElement {
   constructor() {
     super();
     this.$main_window = document.querySelector('.main-window');
-    this.$chats_list = document.querySelector('chats-list');
+    this.$chats_list = document.querySelector('my-chats');
     
     this.shadowRoot = this.attachShadow({ mode: 'open' });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
@@ -191,7 +191,7 @@ class MainHeader extends HTMLElement {
     this.$chatHeader.style.display = 'none';
     this.$chats_list.chatsRender();
     this.$main_window.removeChild(this.$main_window.lastChild);
-    this.$main_window.querySelector('.create-chat').style.display = 'inline-block';
+    this.$main_window.querySelector('.create-dialog').style.display = 'inline-block';
     this.$chats_list.style.display = 'flex';
   }
 }

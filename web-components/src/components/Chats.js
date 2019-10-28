@@ -97,11 +97,11 @@ class Chats extends HTMLElement {
     this.chatsRender();
 
     this.$MainHeader = document.querySelector('main-header');
-    this.$chats_list = document.querySelector('chats-list');
+    this.$chats_list = document.querySelector('my-chats');
     this.$chatHeader = this.$MainHeader.$chatHeader;
     this.$chatsHeader = this.$MainHeader.$chatsHeader;
     
-    this.$newchat_button = this.$main_window.querySelector('.create-chat');
+    this.$newchat_button = this.$main_window.querySelector('.create-dialog');
     this.$newchat_button.addEventListener('click', this.onChatCreateClicked.bind(this));
   }
 
@@ -169,7 +169,7 @@ class Chats extends HTMLElement {
       spanFormatLastMessageText.innerText = lastmessageObj.messageText;
       spanFormatLastMessageTime.innerText = `${hours}:${minutes}`;
     }
-    
+
     divFormatIndicator.innerHTML = readFalse;
     divFormatMessagePreview.appendChild(spanFormatbuddyName);
     divFormatMessagePreview.appendChild(spanFormatLastMessageText);
@@ -204,7 +204,7 @@ class Chats extends HTMLElement {
     chat.$chatsArrayKey = chatsArrayKey;
 
     this.$chatHeader.style.display = 'flex';
-    this.$main_window.querySelector('.create-chat').style.display = 'none';
+    this.$main_window.querySelector('.create-dialog').style.display = 'none';
     chat.style.display = 'flex';
     this.$main_window.appendChild(chat);
     chat.$input.$input.focus();
@@ -242,4 +242,4 @@ class Chats extends HTMLElement {
   }
 }
 
-customElements.define('chats-list', Chats);
+customElements.define('my-chats', Chats);
