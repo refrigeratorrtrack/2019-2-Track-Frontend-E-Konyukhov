@@ -18,4 +18,4 @@ deploy:
     branch:
       - master
       - devel
-      - homework2
+      - homework3
