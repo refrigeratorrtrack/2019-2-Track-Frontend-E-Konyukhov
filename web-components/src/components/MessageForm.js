@@ -2,37 +2,103 @@ const template = document.createElement('template');
 template.innerHTML = `
   <style>
     form-input {
+      height: 6vh;
       display: flex;
       flex-direction: row;
-      width: 100%;
+      justify-content: space-between;
     }
-
-    .messages-container {
+    
+    .form-chat {
+      height: 100%;
       display: flex;
       flex-direction: column;
-      height: calc(100vh - 102px);
-      overflow-y: scroll;
-      background-color: #eee;
     }
-
-    .send-container {
+    
+    .chat-container {
+      height: 85vh;
       display: flex;
-      flex-direction: row;
-      position: fixed;
-      bottom: 0px;
-      right: 0px;
-      left: 0px;
-    }
+      flex-direction: column;
+      background-color: #eee;
 
+      -webkit-overflow-scrolling: touch;
+      overflow-y: scroll;
+    }
+    
+    .custom-message {
+      display: inline-flex;
+      line-height: 4vh;
+      max-width: 50%;
+      min-width: 15%;
+      flex-direction: column;
+      border: 1px solid black;
+      border-radius: 1vh;
+      margin-top: 1vh;
+      margin-bottom: 1vh;
+    }
+    
+    .my-messages {
+      position: relative;
+      justify-content: flex-end;
+      align-items: flex-end;
+      align-self: flex-end;
+      background-color: #8e24aa25;
+      margin-right: 4vh;
+    }
+    
+    .my-messages::before {
+      content: ' ';
+      position: absolute;
+      width: 0;
+      height: 0;
+      right: -2vh;
+      bottom: 1vh;
+      border: calc(1vh + 3px) solid;
+      border-color: transparent transparent #e2d2e6 #e2d2e6;
+    }
+    
+    .not-my-messages {
+      position: relative;
+      justify-content: flex-start;
+      align-items: flex-end;
+      align-self: flex-start;
+      background-color: #fafafa;
+      margin-left: 4vh;
+    }
+      
+    .not-my-messages::before {
+      content: ' ';
+      position: absolute;
+      width: 0;
+      height: 0;
+      left: -2vh;
+      bottom: 1vh;
+      border: 1vh solid;
+      border-color: transparent #fff #fff transparent;
+    }
+      
     input[type=submit] {
       visibility: collapse;
     }
+
+    .flex-container {
+      display: -webkit-box;   /* iOS 6-, Safari 3.1-6 */
+      display: -moz-box;      /* Firefox 19 */
+      display: -ms-flexbox;   /* IE 10 */
+      display: -webkit-flex;  /* Chrome */
+      display: inline-flex;   /* Opera 12.1, Firefox 20+ */
+    }
+
+    .flex-item {
+      -webkit-box-flex: 1;    /* iOS 6-, Safari 3.1-6 */
+      -moz-box-flex: 1;       /* Firefox 19- */
+      -webkit-flex: 1;        /* Chrome */
+      -ms-flex: 1;            /* IE 10 */
+      flex: 1;                /* Opera 12.1, Firefox 20+ */
+    }
   </style>
-  <form>
-    <div class="messages-container"></div>
-    <div class="send-container">
-      <form-input name="message-text" placeholder="Введите сообщение"></form-input>
-    </div>
+    
+  <form class="form-chat">
+    <div class="chat-container flex-container"></div>
   </form>
 `;
 
@@ -43,22 +109,20 @@ class MessageForm extends HTMLElement {
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 
     this.$form = this.shadowRoot.querySelector('form');
-    this.$input = this.shadowRoot.querySelector('form-input');
+    this.$form.appendChild(document.createElement('form-input'));
+    this.$input = this.$form.querySelector('form-input');
 
-    this.$messagesContainer = this.shadowRoot.querySelector('.messages-container');
-    this.$sendButton = this.$input.$sendButton;
+    this.$input.setAttribute('name', 'message-text');
+    this.$input.setAttribute('placeholder', 'Сообщение');
 
-    // Fucking saved!
-    this.$dialogId = '1488';
-    this.$messagesArray = JSON.parse(localStorage.getItem(this.$dialogId));
+    this.$chatContainer = this.shadowRoot.querySelector('.chat-container');
+    this.$attach_button = this.$input.$attach_button;
+    this.$submit_button = this.$input.$submit_button;
 
-    if (this.$messagesArray === null) {
-      this.$messagesArray = [];
-    }
+    this.$idChat = 0;
+    this.$chatsArrayKey = 'chatsArray';
 
-    this.loadMessages();
-
-    this.$sendButton.addEventListener('click', this.onSubmitClicked.bind(this));
+    this.$submit_button.addEventListener('click', this.onSubmitClicked.bind(this));
     this.$form.addEventListener('submit', this.onSubmit.bind(this));
     this.$form.addEventListener('keypress', this.onKeyPress.bind(this));
     this.$form.addEventListener('keyup', this.onKeyUp.bind(this));
@@ -66,79 +130,80 @@ class MessageForm extends HTMLElement {
 
   onSubmitClicked() {
     this.$form.dispatchEvent(new Event('submit'));
-    this.$sendButton.style.visibility = 'hidden';
+    this.$submit_button.style.display = 'none';
     this.$input.$input.focus();
   }
 
   onSubmit(event) {
     event.preventDefault();
-    if (this.$input.value !== '') {
-      this.addMessage(this.messageGenerator(this.$input.value));
+
+    if (this.$input.value === '') {
+      return;
     }
 
+    const messageObj = {};
+    messageObj.messageText = this.$input.value;
+    messageObj.messageAuthor = 'Me';
+    messageObj.haveReadFlag = false;
+    messageObj.sendingTime = new Date();
+
     this.$input.value = '';
+    this.addMessage(messageObj);
+    this.messageToLocal(messageObj);
   }
 
   onKeyPress(event) {
-    if (event.keyCode === 13) {
-      if (this.$input.value !== '') {
-        this.addMessage(this.messageGenerator(this.$input.value));
-      }
+    this.onKeyUp();
 
-      this.$input.value = '';
+    if (event.keyCode === 13) {
+      this.$form.dispatchEvent(new Event('submit'));
     }
   }
 
   onKeyUp() {
-    this.$sendButton.style.marginLeft = '5px';
-    this.$sendButton.style.visibility = 'inherit';
+    this.$submit_button.style.display = 'inline-block';
 
     if (this.$input.value === '') {
-      this.$sendButton.style.visibility = 'hidden';
+      this.$submit_button.style.display = 'none';
     }
   }
 
-  messageGenerator(fuckingText) {
-    if (localStorage.getItem('counter') === null) {
-      localStorage.setItem('counter', 0);
-    } else {
-      localStorage.counter += 1;
-    }
+  addMessage(messageObj) {
+    const divFormatCustomMessage = document.createElement('custom-message');
 
-    const messageTime = new Date();
+    divFormatCustomMessage.text = messageObj.messageText;
+    divFormatCustomMessage.author = messageObj.messageAuthor;
+    divFormatCustomMessage.read = messageObj.haveReadFlag;
+    const date = new Date(messageObj.sendingTime);
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    hours = (hours < 10) ? (`0${hours}`) : hours;
+    minutes = (minutes < 10) ? (`0${minutes}`) : minutes;
+    divFormatCustomMessage.time = `${hours}:${minutes}`;
 
-    const generatedMessage = {
-      name: 'George',
-      text: fuckingText,
-      time: [messageTime.getHours(), messageTime.getMinutes()],
-    };
+    divFormatCustomMessage.build();
 
-    this.$messagesArray.push(generatedMessage);
-    localStorage.setItem(this.$dialogId, JSON.stringify(this.$messagesArray));
-
-    return generatedMessage;
+    this.$chatContainer.appendChild(divFormatCustomMessage);
+    this.$chatContainer.scrollTop = 9999;
   }
 
-  addMessage(tempMessage) {
-    if (typeof tempMessage !== 'undefined') {
-      const newMessage = document.createElement('custom-message');
+  messageToLocal(messageObj) {
+    const storageChatArray = JSON.parse(localStorage.getItem(this.$chatsArrayKey));
 
-      newMessage.$messageText.innerText = tempMessage.text;
-
-      let hours = tempMessage.time[0];
-      let minutes = tempMessage.time[1];
-      hours = (hours < 10) ? (`0${hours}`) : hours;
-      minutes = (minutes < 10) ? (`0${minutes}`) : minutes;
-      newMessage.$messageTime.innerText = `${hours}:${minutes}`;
-
-      this.$messagesContainer.appendChild(newMessage);
-      newMessage.scrollIntoView();
+    if (storageChatArray[this.$idChat].messages.length === 0) {
+      storageChatArray[this.$idChat].messages = [];
     }
+
+    storageChatArray[this.$idChat].messages.push(messageObj);
+    localStorage.setItem(this.$chatsArrayKey, JSON.stringify(storageChatArray));
   }
 
-  loadMessages() {
-    for (let i = 0; i <= this.$messagesArray.length; i += 1) {
-      this.addMessage(this.$messagesArray[i]);
+  messagesRender() {
+    const storageChatArray = JSON.parse(localStorage.getItem(this.$chatsArrayKey));
+    const chatObj = storageChatArray[this.$idChat];
+
+    for (let i = 0; i < chatObj.messages.length; i += 1) {
+      this.addMessage(chatObj.messages[i]);
     }
   }
 }
