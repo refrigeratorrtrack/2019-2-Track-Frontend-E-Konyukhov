@@ -34,6 +34,9 @@ template.innerHTML = `
       border-radius: 1vh;
       margin-top: 1vh;
       margin-bottom: 1vh;
+
+      animation-name: add-message-animation;
+      animation-duration: 0.5s;
     }
     
     .my-messages {
@@ -94,6 +97,15 @@ template.innerHTML = `
       -webkit-flex: 1;        /* Chrome */
       -ms-flex: 1;            /* IE 10 */
       flex: 1;                /* Opera 12.1, Firefox 20+ */
+    }
+
+    @keyframes add-message-animation {
+      0% {
+        transform: scale(0);
+      }
+      100% {
+        transform: scale(1);
+      }
     }
   </style>
     

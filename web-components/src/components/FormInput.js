@@ -25,6 +25,16 @@ template.innerHTML = `
       color: #888;
     }
 
+    .attach-button:focus {
+      color: #888C;
+    }
+    .attach-button:hover {
+      color: #888B;
+    }
+    .attach-button:active {
+      background: #0002;
+    }
+
     .submit-button {
       display: none;
       background-color: inherit;
@@ -34,6 +44,30 @@ template.innerHTML = `
       border-radius: 100%;
       color: #8e24aa;
       overflow: hidden;
+
+      animation-name: show-submit-button;
+      animation-duration: 0.1s;
+      animation-timing-function: linear;
+    }
+
+    .submit-button:focus {
+      color: #8E24AACC;
+    }
+    .submit-button:hover {
+      color: #8E24AABB;
+    }
+    .submit-button:active {
+      background: #0002;
+    }
+    
+    @keyframes show-submit-button {
+      0% {
+        width: 0;
+      }
+
+      100% {
+        width: 6vh;
+      }
     }
 
     .attach-button-img {
