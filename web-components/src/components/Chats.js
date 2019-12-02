@@ -19,6 +19,10 @@ template.innerHTML = `
       align-items: center;
       user-select: none;
     }
+
+    .chat-elem:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
     
     .buddy-img {
       color: #9c33ff;
